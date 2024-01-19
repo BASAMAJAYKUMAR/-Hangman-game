@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hangman Game</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      margin: 50px;
+    }
+
+    #word-display {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    #feedback {
+      font-size: 1.5em;
+      margin-top: 20px;
+    }
+
+    button {
+      font-size: 1em;
+      margin: 10px;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Hangman Game</h1>
+
+  <div id="word-display"></div>
+  <p id="feedback"></p>
+
+  <button onclick="startGame()">Start New Game</button>
+  <button onclick="guessLetter('A')">A</button>
+  <button onclick="guessLetter('B')">B</button>
+  <button onclick="guessLetter('C')">C</button>
+  <!-- Add more buttons for other letters -->
+
+  <script>
+    const words = ['JAVASCRIPT', 'HTML', 'CSS', 'PYTHON', 'JAVA', 'NODEJS', 'REACT'];
+    let selectedWord = '';
+    let guessedLetters = [];
+
+    function startGame() {
+      selectedWord = words[Math.floor(Math.random() * words.length)];
+      guessedLetters = [];
+      updateDisplay();
+    }
+
+    function guessLetter(letter) {
+      if (!guessedLetters.includes(letter)) {
+        guessedLetters.push(letter);
+        updateDisplay();
+      }
+
+      checkGameOver();
+    }
+
+    function updateDisplay() {
+      const wordDisplay = document.getElementById('word-display');
+      const feedback = document.getElementById('feedback');
+
+      let displayText = '';
+      let allLettersGuessed = true;
+
+      for (const char of selectedWord) {
+        if (guessedLetters.includes(char)) {
+          displayText += char + ' ';
+        } else {
+          displayText += '_ ';
+          allLettersGuessed = false;
+        }
+      }
+
+      wordDisplay.textContent = displayText.trim();
+
+      if (allLettersGuessed) {
+        feedback.textContent = 'Congratulations! You guessed the word!';
+      } else {
+        feedback.textContent = 'Guessed Letters: ' + guessedLetters.join(', ');
+      }
+    }
+
+    function checkGameOver() {
+      const incorrectGuesses = guessedLetters.filter(letter => !selectedWord.includes(letter)).length;
+
+      if (incorrectGuesses >= 6) {
+        document.getElementById('feedback').textContent = 'Game Over! The word was: ' + selectedWord;
+      }
+    }
+  </script>
+
+</body>
+</html>
